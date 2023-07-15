@@ -1,10 +1,15 @@
+from django.urls import path
 from rest_framework import routers
 
-from core.views import UserViewSet
+from core.views import SignUpView, LoginView, ProfileView, UpdatePasswordView
 
-user_router = routers.SimpleRouter()
-user_router.register('users', UserViewSet)
+# user_router = routers.SimpleRouter()
+# user_router.register('users', UserViewSet)
 
-user_urlpatterns = [
+urlpatterns = [
+    path('signup', SignUpView.as_view(), name='signup'),
+    path('login', LoginView.as_view(), name='login'),
+    path('profile', ProfileView.as_view(), name='profile'),
+    path('update_password', UpdatePasswordView.as_view(), name='update_password'),
 ]
-user_urlpatterns += user_router.urls
+# urlpatterns += user_router.urls

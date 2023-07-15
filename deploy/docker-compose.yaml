@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   db:
-    image: postgres:12.4
+    image: postgres:15
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
@@ -41,7 +41,7 @@ services:
       - django_static:/app/static/
 
   frontend:
-    image: sermalenk/skypro-front:lesson-34
+    image: sermalenk/skypro-front:lesson-35
     restart: on-failure
     ports:
       - "80:80"
