@@ -4,10 +4,14 @@ from goals.apps import GoalsConfig
 from goals.views.categories import *
 from goals.views.comments import CommentCreateView, CommentListView, CommentDetailView
 from goals.views.goals import *
+from goals.views.boards import *
 
 app_name = GoalsConfig.name
 
 urlpatterns = [
+    path('board/create', BoardCreateView.as_view(), name='create-board'),
+    path('board/list', BoardListView.as_view(), name='board-list'),
+    path('board/<int:pk>', BoardDetailView.as_view(), name='board-details'),
     path('goal_category/create', CategoryCreateView.as_view(), name='create-category'),
     path('goal_category/list', CategoryListView.as_view(), name='category-list'),
     path('goal_category/<int:pk>', CategoryDetailView.as_view(), name='category-detail'),
