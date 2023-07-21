@@ -23,7 +23,7 @@ class CategoryListView(generics.ListAPIView):
         print(self.request)
         return GoalCategory.objects.filter(
             board__participants__user=self.request.user,
-            board_id=self.request.GET['board']
+            board_id=self.request.GET.get('board')
         ).exclude(is_deleted=True)
 
 
