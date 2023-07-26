@@ -1,0 +1,20 @@
+{
+    "ok": true,
+    "result": {
+        "message_id": 3,
+        "from": {
+            "id": 6669860780,
+            "is_bot": true,
+            "first_name": "TodoLocalBot",
+            "username": "TodoLocalBot_bot"
+        },
+        "chat": {
+            "id": 1585373134,
+            "first_name": "Александр",
+            "username": "Archer981",
+            "type": "private"
+        },
+        "date": 1690299969,
+        "text": "test_hello"
+    }
+}

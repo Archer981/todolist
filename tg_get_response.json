@@ -1,0 +1,54 @@
+{
+    "ok": true,
+    "result": [
+        {
+            "update_id": 539915658,
+            "message": {
+                "message_id": 1,
+                "from": {
+                    "id": 1585373134,
+                    "is_bot": false,
+                    "first_name": "Александр",
+                    "username": "Archer981",
+                    "language_code": "ru"
+                },
+                "chat": {
+                    "id": 1585373134,
+                    "first_name": "Александр",
+                    "username": "Archer981",
+                    "type": "private"
+                },
+                "date": 1690299491,
+                "text": "/start",
+                "entities": [
+                    {
+                        "offset": 0,
+                        "length": 6,
+                        "type": "bot_command"
+                    }
+                ]
+            }
+        },
+        {
+            "update_id": 539915659,
+            "message": {
+                "message_id": 2,
+                "from": {
+                    "id": 1585373134,
+                    "is_bot": false,
+                    "first_name": "Александр",
+                    "username": "Archer981",
+                    "language_code": "ru"
+                },
+                "chat": {
+                    "id": 1585373134,
+                    "first_name": "Александр",
+                    "username": "Archer981",
+                    "type": "private"
+                },
+                "date": 1690299499,
+                "text": "123"
+            }
+        }
+    ]
+}

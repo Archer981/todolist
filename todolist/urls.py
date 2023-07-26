@@ -17,11 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from bot.urls import bot_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('core/', include(('core.urls', 'core'))),
     path('goals/', include('goals.urls', namespace='goals')),
+    path('bot/', include(bot_urlpatterns)),
     path('oauth/', include('social_django.urls', namespace='social')),
 ]
-
