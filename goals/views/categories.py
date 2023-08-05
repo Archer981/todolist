@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.db.models import QuerySet
 from rest_framework import generics, permissions, filters
 
 from goals.models import GoalCategory, Goal
@@ -7,11 +8,17 @@ from goals.serializers import GoalCategorySerializer, GoalCategoryWithUserSerial
 
 
 class CategoryCreateView(generics.CreateAPIView):
+    """
+    Вьюшка создание категории
+    """
     serializer_class = GoalCategorySerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
 class CategoryListView(generics.ListAPIView):
+    """
+    Вьюшка списка категорий
+    """
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = GoalCategoryWithUserSerializer
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
@@ -19,19 +26,27 @@ class CategoryListView(generics.ListAPIView):
     ordering = ['title']
     search_fields = ['title']
 
-    def get_queryset(self):
-        return GoalCategory.objects.filter(
-            board__participants__user=self.request.user,
-            board_id=self.request.GET.get('board')
-        ).exclude(is_deleted=True)
+    def get_queryset(self) -> QuerySet[GoalCategory]:
+        if self.request.GET.get('board'):
+            return GoalCategory.objects.filter(
+                board__participants__user=self.request.user,
+                board_id=self.request.GET.get('board')
+            ).exclude(is_deleted=True)
+        else:
+            return GoalCategory.objects.filter(
+                board__participants__user=self.request.user
+            ).exclude(is_deleted=True)
 
 
 class CategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Вьюшка на одну категорию
+    """
     serializer_class = GoalCategoryWithUserSerializer
     permission_classes = [GoalCategoryPermission]
     queryset = GoalCategory.objects.exclude(is_deleted=True)
 
-    def perform_destroy(self, instance):
+    def perform_destroy(self, instance: GoalCategory) -> None:
         with transaction.atomic():
             instance.is_deleted = True
             instance.save()

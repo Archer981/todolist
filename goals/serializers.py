@@ -8,6 +8,9 @@ from goals.models import GoalCategory, Goal, GoalComment, Board, BoardParticipan
 
 
 class BoardSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для доски
+    """
     class Meta:
         model = Board
         read_only_fields = ('id', 'created', 'updated', 'is_deleted')
@@ -15,6 +18,9 @@ class BoardSerializer(serializers.ModelSerializer):
 
 
 class ParticipantSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для участника
+    """
     role = serializers.ChoiceField(choices=BoardParticipant.editable_roles)
     user = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())
 
@@ -25,9 +31,12 @@ class ParticipantSerializer(serializers.ModelSerializer):
 
 
 class BoardWithParticipantsSerializer(BoardSerializer):
+    """
+    Сериализатор для доски c участником
+    """
     participants = ParticipantSerializer(many=True)
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Board, validated_data: dict) -> Board:
         owner = validated_data.pop("user")
         new_participants = validated_data.pop("participants")
         new_by_id = {part["user"].id: part for part in new_participants}
@@ -56,9 +65,12 @@ class BoardWithParticipantsSerializer(BoardSerializer):
 
 
 class GoalCategorySerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для категории с целью
+    """
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
-    def validate_board(self, board):
+    def validate_board(self, board: Board) -> Board:
         if board.is_deleted:
             raise ValidationError('Board not exists')
         if not BoardParticipant.objects.filter(
@@ -76,10 +88,16 @@ class GoalCategorySerializer(serializers.ModelSerializer):
 
 
 class GoalCategoryWithUserSerializer(GoalCategorySerializer):
+    """
+    Сериализатор для категории и цели по пользователю
+    """
     user = ProfileSerializer(read_only=True)
 
 
 class GoalSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для цели
+    """
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
@@ -87,7 +105,7 @@ class GoalSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('id', 'created', 'updated', 'user')
 
-    def validate_category(self, category):
+    def validate_category(self, category: GoalCategory) -> GoalCategory:
         if category.is_deleted:
             raise ValidationError('Category not exists')
         if not BoardParticipant.objects.filter(
@@ -100,10 +118,16 @@ class GoalSerializer(serializers.ModelSerializer):
 
 
 class GoalWithUserSerializer(GoalSerializer):
+    """
+    Сериализатор для цели с пользователем
+    """
     user = ProfileSerializer(read_only=True)
 
 
 class GoalCommentSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для комментария и цели
+    """
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
@@ -111,7 +135,7 @@ class GoalCommentSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('id', 'created', 'updated', 'user')
 
-    def validate_goal(self, goal):
+    def validate_goal(self, goal: Goal) -> Goal:
         if goal.status == Goal.Status.archived:
             raise ValidationError('Goal not exists')
         if not BoardParticipant.objects.filter(
@@ -124,5 +148,8 @@ class GoalCommentSerializer(serializers.ModelSerializer):
 
 
 class GoalCommentWithUserSerializer(GoalCommentSerializer):
+    """
+    Сериализатор для комментария и цели с привязкой к пользователю
+    """
     user = ProfileSerializer(read_only=True)
     goals = serializers.PrimaryKeyRelatedField(read_only=True)

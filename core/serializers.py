@@ -1,3 +1,5 @@
+from typing import Any
+
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError, NotAuthenticated
@@ -7,6 +9,11 @@ from core.models import User
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор создания пользователя
+    validate - проверка корректно введенного повторно пароля
+    create - удаление повторного пароля, запись данных
+    """
     password = PasswordField()
     password_repeat = PasswordField()
     # password = serializers.CharField(required=True, write_only=True)
@@ -28,22 +35,31 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.Serializer):
+    """
+    Сериализатор логина
+    """
     username = serializers.CharField(required=True)
     password = PasswordField(validation_required=False)
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор профайла
+    """
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email')
 
 
 class UpdatePasswordSerializer(serializers.Serializer):
+    """
+    Сериализатор изменения пароля
+    """
     old_password = PasswordField(validation_required=False)
     new_password = PasswordField()
 
-    def validate_old_password(self, old_password):
-        request = self.context['request']
+    def validate_old_password(self, old_password: str) -> str:
+        request: Any = self.context['request']
         if not request.user.is_authenticated:
             raise NotAuthenticated
         if not request.user.check_password(old_password):

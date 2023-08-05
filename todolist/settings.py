@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_spectacular',
     'rest_framework',
     'django_filters',
     'social_django',
@@ -57,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'request_logging.middleware.LoggingMiddleware',
 ]
 
 ROOT_URLCONF = 'todolist.urls'
@@ -155,36 +157,34 @@ AUTHENTICATION_BACKENDS = (
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    'formatters': {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
         'console': {
-            'format': '%(asctime)s - %(levelname)s - %(message)s',
-            'datefrm': '%y-%m-%d %H:%M:%S',
-        }
-    },
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-            "formatter": "console",
+            'class': 'logging.StreamHandler',
         },
-        'null': {
-            'class': 'logging.NullHandler',
-        }
     },
-    "loggers": {
-        '': {
-            'level': 'DEBUG' if DEBUG else 'INFO',
+    'loggers': {
+        'django.request': {
             'handlers': ['console'],
-        },
-        'urllib3': {
-            'handler': ['null'],
+            'level': 'DEBUG',  # change debug level as appropiate
+            'propagate': False,
         },
     },
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Your Project API',
+    'DESCRIPTION': 'Your project description',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # OTHER SETTINGS
 }
 
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 HOST = os.getenv('HOST')
+

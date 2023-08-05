@@ -7,6 +7,7 @@ from core.models import User
 
 @admin.register(User)
 class UserAdmin(UserAdmin):
+    """Регистрация админки"""
     empty_value_display = '-empty-'
     # exclude = ('password',)
     list_display = ('username', 'email', 'first_name', 'last_name',)
