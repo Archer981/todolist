@@ -1,6 +1,5 @@
 # todolist - выпускной проект приложения
 ## python3.10, Django, Postgres
-
 Запуск:
 * установить зависимости из файла requirements.txt
 * заполнить .env:
